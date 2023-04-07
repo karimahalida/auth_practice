@@ -12,24 +12,32 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const LoginForm = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const onLogin = () => {
-        try {
-            const data = {
-                email: document.getElementById("email").value,
-                password: document.getElementById("password").value
-            }
-    
-            console.log(data);
-            document.getElementById("email").value = ""
-            document.getElementById("password").value = ""
-        } catch (err) {
-            console.log(err);
-        }
-      }
+  const onLogin = async () => {
+    try {
+      const data = {
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+      };
+
+      const result = await axios.post("http://localhost:2000/auth/login", data);
+      console.log(result);
+      document.getElementById("email").value = "";
+      document.getElementById("password").value = "";
+
+      alert(result.data.message);
+
+      navigate("/");
+
+      localStorage.setItem("token", result.data.token);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Flex
